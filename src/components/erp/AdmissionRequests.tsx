@@ -103,16 +103,18 @@ export default function AdmissionRequests() {
                     <CardDescription>Review and process new student applications.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Student Name</TableHead>
-                                <TableHead>Applying for Grade</TableHead>
-                                <TableHead>Gender</TableHead>
-                                <TableHead>Submission Date</TableHead>
-                                <TableHead className="text-right">Actions</TableHead>
-                            </TableRow>
-                        </TableHeader>
+                    <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
+                      <div className="min-w-[640px]">
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Student Name</TableHead>
+                                    <TableHead>Applying for Grade</TableHead>
+                                    <TableHead>Gender</TableHead>
+                                    <TableHead>Submission Date</TableHead>
+                                    <TableHead className="text-right">Actions</TableHead>
+                                </TableRow>
+                            </TableHeader>
                         <TableBody>
                             {displayedApplications.length > 0 ? (
                                 displayedApplications.map(app => (
@@ -141,6 +143,8 @@ export default function AdmissionRequests() {
                             )}
                         </TableBody>
                     </Table>
+                  </div>
+                </div>
                 </CardContent>
             </Card>
             <HostelAllocationDialog 

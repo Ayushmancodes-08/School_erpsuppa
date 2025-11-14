@@ -70,17 +70,19 @@ export default function JobApplications() {
                 <CardDescription>Review and process new teacher applications.</CardDescription>
             </CardHeader>
             <CardContent>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Applicant Name</TableHead>
-                            <TableHead>Subject</TableHead>
-                            <TableHead>Experience</TableHead>
-                            <TableHead>Resume/Profile</TableHead>
-                             <TableHead>Status</TableHead>
-                            <TableHead className="text-right">Actions</TableHead>
-                        </TableRow>
-                    </TableHeader>
+                <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
+                  <div className="min-w-[720px]">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Applicant Name</TableHead>
+                                <TableHead>Subject</TableHead>
+                                <TableHead>Experience</TableHead>
+                                <TableHead>Resume/Profile</TableHead>
+                                 <TableHead>Status</TableHead>
+                                <TableHead className="text-right">Actions</TableHead>
+                            </TableRow>
+                        </TableHeader>
                     <TableBody>
                         {(jobApplications || []).length > 0 ? (
                             jobApplications?.map(app => (
@@ -119,6 +121,8 @@ export default function JobApplications() {
                         )}
                     </TableBody>
                 </Table>
+              </div>
+            </div>
             </CardContent>
         </Card>
          <Dialog open={isResumeOpen} onOpenChange={setIsResumeOpen}>
