@@ -13,6 +13,7 @@ export interface Teacher {
   id: string;
   name: string;
   subject: string;
+  avatar?: string;
 }
 
 export type FeeStatus = 'Paid' | 'Due' | 'Overdue';
@@ -91,9 +92,13 @@ export interface AdmissionApplication {
   applyingForGrade: string;
   parentName: string;
   parentEmail: string;
+  parentPhone?: string;
+  address?: string;
+  dateOfBirth?: string;
+  gender: string;
+  previousSchool?: string;
   status: 'Pending' | 'Approved' | 'Rejected';
   date: string;
-  gender: string;
   createdAt?: string;
 }
 

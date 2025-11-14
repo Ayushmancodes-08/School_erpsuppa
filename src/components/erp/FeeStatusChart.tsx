@@ -63,7 +63,7 @@ export default function FeeStatusChart() {
     <Card className="flex flex-col h-full">
       <CardHeader className="items-center pb-0">
         <CardTitle>Fee Status Overview</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardDescription>Current Data</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer

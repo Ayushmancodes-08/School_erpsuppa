@@ -1,7 +1,8 @@
 "use client";
 
 import { useToast } from "@/hooks/use-toast";
-import { DollarSign, Edit, Receipt, TrendingUp, Users } from "lucide-react";
+import { useSupabase } from "@/supabase/provider";
+import { DollarSign, Edit, Receipt, TrendingUp, Users, Plus, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,15 +14,30 @@ import { useData } from "@/lib/data-context";
 import { useState } from "react";
 import { Fee, HostelFee } from "@/lib/types";
 import EditFeeDialog from "./EditFeeDialog";
+import AddFeeDialog from "./AddFeeDialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import HostelManagement from "./HostelManagement";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export default function FinanceDashboard() {
   const { fees, hostelFees } = useData();
   const { toast } = useToast();
+  const supabase = useSupabase();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedFee, setSelectedFee] = useState<Fee | HostelFee | null>(null);
   const [selectedFeeType, setSelectedFeeType] = useState<'tuition' | 'hostel' | null>(null);
+  const [addFeeType, setAddFeeType] = useState<'tuition' | 'hostel'>('tuition');
 
   const totalFees = fees?.reduce((sum, fee) => sum + fee.amount, 0) || 0;
   const paidFees = fees?.filter(f => f.status === 'Paid').reduce((sum, fee) => sum + fee.amount, 0) || 0;
@@ -39,6 +55,47 @@ export default function FinanceDashboard() {
     setSelectedFee(fee);
     setSelectedFeeType(type);
     setIsEditDialogOpen(true);
+  };
+
+  const handleAddClick = (type: 'tuition' | 'hostel') => {
+    setAddFeeType(type);
+    setIsAddDialogOpen(true);
+  };
+
+  const handleDeleteClick = (fee: Fee | HostelFee, type: 'tuition' | 'hostel') => {
+    setSelectedFee(fee);
+    setSelectedFeeType(type);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!supabase || !selectedFee || !selectedFeeType) return;
+
+    try {
+      const tableName = selectedFeeType === 'tuition' ? 'fees' : 'hostel_fees';
+      const { error } = await supabase
+        .from(tableName)
+        .delete()
+        .eq('id', selectedFee.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Fee Deleted",
+        description: `${selectedFeeType === 'tuition' ? 'Tuition' : 'Hostel'} fee has been deleted successfully.`,
+      });
+
+      setIsDeleteDialogOpen(false);
+      setSelectedFee(null);
+      setSelectedFeeType(null);
+    } catch (error: any) {
+      console.error("Error deleting fee:", error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to delete fee. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -75,8 +132,12 @@ export default function FinanceDashboard() {
         <div className="lg:col-span-2">
             <Card>
                 <CardHeader>
-                    <CardTitle className="font-headline">Fee Management</CardTitle>
-                    <CardDescription>Overview of tuition and hostel fees for all students.</CardDescription>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle className="font-headline">Fee Management</CardTitle>
+                        <CardDescription>Overview of tuition and hostel fees for all students.</CardDescription>
+                      </div>
+                    </div>
                 </CardHeader>
                 <CardContent>
                     <Tabs defaultValue="tuition">
@@ -85,6 +146,12 @@ export default function FinanceDashboard() {
                             <TabsTrigger value="hostel">Hostel Fees</TabsTrigger>
                         </TabsList>
                         <TabsContent value="tuition">
+                            <div className="flex justify-end mb-4">
+                              <Button onClick={() => handleAddClick('tuition')} size="sm">
+                                <Plus className="h-4 w-4 mr-2" />
+                                Add Tuition Fee
+                              </Button>
+                            </div>
                             <ScrollArea className="h-[450px] mt-4">
                             <Table>
                                 <TableHeader>
@@ -124,6 +191,13 @@ export default function FinanceDashboard() {
                                         >
                                           <Receipt className="h-4 w-4" />
                                         </Button>
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          onClick={() => handleDeleteClick(fee, 'tuition')}
+                                        >
+                                          <Trash2 className="h-4 w-4 text-destructive" />
+                                        </Button>
                                     </TableCell>
                                     </TableRow>
                                 ))}
@@ -132,6 +206,12 @@ export default function FinanceDashboard() {
                             </ScrollArea>
                         </TabsContent>
                         <TabsContent value="hostel">
+                            <div className="flex justify-end mb-4">
+                              <Button onClick={() => handleAddClick('hostel')} size="sm">
+                                <Plus className="h-4 w-4 mr-2" />
+                                Add Hostel Fee
+                              </Button>
+                            </div>
                              <ScrollArea className="h-[450px] mt-4">
                             <Table>
                                 <TableHeader>
@@ -171,6 +251,13 @@ export default function FinanceDashboard() {
                                         >
                                           <Receipt className="h-4 w-4" />
                                         </Button>
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          onClick={() => handleDeleteClick(fee, 'hostel')}
+                                        >
+                                          <Trash2 className="h-4 w-4 text-destructive" />
+                                        </Button>
                                     </TableCell>
                                     </TableRow>
                                 ))}
@@ -198,6 +285,27 @@ export default function FinanceDashboard() {
             feeType={selectedFeeType}
         />
     )}
+    <AddFeeDialog
+        open={isAddDialogOpen}
+        onOpenChange={setIsAddDialogOpen}
+        feeType={addFeeType}
+    />
+    <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This will permanently delete this fee record. This action cannot be undone.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={handleDeleteConfirm} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+            Delete
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
     </>
   );
 }

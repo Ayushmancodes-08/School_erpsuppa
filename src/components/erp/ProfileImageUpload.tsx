@@ -11,12 +11,14 @@ type ProfileImageUploadProps = {
   studentId: string;
   currentAvatar: string;
   onUploadSuccess: (newAvatarUrl: string) => void;
+  userType?: 'student' | 'teacher';
 };
 
 export default function ProfileImageUpload({ 
   studentId, 
   currentAvatar, 
-  onUploadSuccess 
+  onUploadSuccess,
+  userType = 'student'
 }: ProfileImageUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
@@ -83,7 +85,8 @@ export default function ProfileImageUpload({
       // Create unique filename
       const fileExt = file.name.split('.').pop();
       const fileName = `${studentId}-${Date.now()}.${fileExt}`;
-      const filePath = `student-avatars/${fileName}`;
+      const folderName = userType === 'teacher' ? 'teacher-avatars' : 'student-avatars';
+      const filePath = `${folderName}/${fileName}`;
 
       console.log('Uploading image:', { fileName, filePath, fileSize: file.size });
 
@@ -97,6 +100,12 @@ export default function ProfileImageUpload({
 
       if (uploadError) {
         console.error('Upload error:', uploadError);
+        
+        // Check if bucket doesn't exist
+        if (uploadError.message.includes('Bucket not found')) {
+          throw new Error('Storage bucket not configured. Please run SETUP-STORAGE-BUCKETS.sql in your Supabase SQL Editor.');
+        }
+        
         throw uploadError;
       }
 
@@ -110,9 +119,10 @@ export default function ProfileImageUpload({
       const publicUrl = urlData.publicUrl;
       console.log('Public URL:', publicUrl);
 
-      // Update student record with new avatar URL
+      // Update record with new avatar URL
+      const tableName = userType === 'teacher' ? 'teachers' : 'students';
       const { error: updateError } = await supabase
-        .from('students')
+        .from(tableName)
         .update({ avatar: publicUrl })
         .eq('id', studentId);
 
@@ -121,7 +131,7 @@ export default function ProfileImageUpload({
         throw updateError;
       }
 
-      console.log('Student avatar updated successfully');
+      console.log(`${userType} avatar updated successfully`);
 
       toast({
         title: "Upload Successful!",
@@ -161,35 +171,30 @@ export default function ProfileImageUpload({
       <div className="flex flex-col items-center gap-2">
         <input
           type="file"
-          id="avatar-upload"
+          id={`avatar-upload-${studentId}`}
           accept="image/*"
           onChange={handleFileSelect}
           disabled={uploading}
           className="hidden"
         />
-        <label htmlFor="avatar-upload">
-          <Button
-            type="button"
-            variant="outline"
-            disabled={uploading}
-            onClick={() => document.getElementById('avatar-upload')?.click()}
-            asChild
-          >
-            <span>
-              {uploading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Uploading...
-                </>
-              ) : (
-                <>
-                  <Upload className="mr-2 h-4 w-4" />
-                  Upload Photo
-                </>
-              )}
-            </span>
-          </Button>
-        </label>
+        <Button
+          type="button"
+          variant="outline"
+          disabled={uploading}
+          onClick={() => document.getElementById(`avatar-upload-${studentId}`)?.click()}
+        >
+          {uploading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Uploading...
+            </>
+          ) : (
+            <>
+              <Upload className="mr-2 h-4 w-4" />
+              Upload Photo
+            </>
+          )}
+        </Button>
         <p className="text-xs text-muted-foreground">
           JPG, PNG or GIF (max 5MB)
         </p>

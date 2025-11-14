@@ -8,14 +8,10 @@ import { useData } from "@/lib/data-context";
 import FeePayment from "./FeePayment";
 import NoticeBoard from "./NoticeBoard";
 import { Skeleton } from "../ui/skeleton";
-import ProfileImageUpload from "./ProfileImageUpload";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { useState } from "react";
 
 export default function StudentDashboard() {
   const { students, studentAttendance, fees, hostelFees } = useData();
   const studentId = sessionStorage.getItem("studentId");
-  const [avatarUrl, setAvatarUrl] = useState<string>("");
   
   if (!students || !studentAttendance || !fees || !hostelFees) {
     return (
@@ -57,29 +53,11 @@ export default function StudentDashboard() {
   const tuitionFee = fees.find(fee => fee.studentId === loggedInStudent.id);
   const hostelFee = hostelFees.find(fee => fee.studentId === loggedInStudent.id);
 
-  const handleAvatarUpload = (newUrl: string) => {
-    setAvatarUrl(newUrl);
-  };
-
   return (
     <div className="space-y-6">
-      <div className="flex items-start justify-between">
-        <div>
-          <h2 className="text-2xl font-bold font-headline">Welcome, {loggedInStudent.name}!</h2>
-          <p className="text-muted-foreground">Here's your dashboard for today.</p>
-        </div>
-        <Card className="w-fit">
-          <CardHeader>
-            <CardTitle className="text-sm">Profile Picture</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ProfileImageUpload
-              studentId={loggedInStudent.id}
-              currentAvatar={avatarUrl || loggedInStudent.avatar}
-              onUploadSuccess={handleAvatarUpload}
-            />
-          </CardContent>
-        </Card>
+      <div>
+        <h2 className="text-2xl font-bold font-headline">Welcome, {loggedInStudent.name}!</h2>
+        <p className="text-muted-foreground">Here's your dashboard for today.</p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

@@ -36,7 +36,7 @@ export default function AdmissionChart() {
     <Card>
       <CardHeader>
         <CardTitle>Admission Rate</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardDescription>Current Data</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="h-64 w-full">

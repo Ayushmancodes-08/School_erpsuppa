@@ -51,7 +51,7 @@ const navLinksByRole: Record<string, NavLink[]> = {
 export default function Header() {
   const router = useRouter();
   const { toast } = useToast();
-  const { students } = useData();
+  const { students, teachers } = useData();
   const [userRole, setUserRole] = useState<string | null>(null);
   const [avatarUrl, setAvatarUrl] = useState("https://picsum.photos/seed/110/100/100");
   const [avatarFallback, setAvatarFallback] = useState("AD");
@@ -69,10 +69,19 @@ export default function Header() {
                 setAvatarFallback(student.name.charAt(0).toUpperCase());
             }
         }
+    } else if (role === 'Teacher') {
+        const teacherId = sessionStorage.getItem("teacherId");
+        if (teacherId && teachers) {
+            const teacher = teachers.find(t => t.id === teacherId);
+            if (teacher) {
+                setAvatarUrl(teacher.avatar || "https://picsum.photos/seed/teacher/200/200");
+                setAvatarFallback(teacher.name.charAt(0).toUpperCase());
+            }
+        }
     } else if (role) {
         setAvatarFallback(role.charAt(0).toUpperCase());
     }
-  }, [students]);
+  }, [students, teachers]);
 
   const handleLogout = () => {
     sessionStorage.removeItem("authenticated");
@@ -149,7 +158,9 @@ export default function Header() {
                 <Link href="/profile">
                   <DropdownMenuItem>Profile</DropdownMenuItem>
                 </Link>
-                <DropdownMenuItem>Settings</DropdownMenuItem>
+                <Link href="/settings">
+                  <DropdownMenuItem>Settings</DropdownMenuItem>
+                </Link>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
               </DropdownMenuContent>

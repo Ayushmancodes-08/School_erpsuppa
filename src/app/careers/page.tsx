@@ -1,6 +1,7 @@
 
 "use client";
 
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -41,7 +42,8 @@ const jobApplicationSchema = z.object({
     (a) => parseInt(z.string().parse(a), 10),
     z.number().min(0, "Experience cannot be negative.")
   ),
-  resume: z.string().min(50, "Please provide your resume details."),
+  resume: z.string().min(10, "Please provide your resume details or upload a PDF."),
+  resumeType: z.enum(['text', 'pdf']).default('text'),
 });
 
 type JobApplicationValues = z.infer<typeof jobApplicationSchema>;
@@ -51,6 +53,8 @@ export default function CareersPage() {
   const heroImage = PlaceHolderImages.find(p => p.id === 'careers-hero');
   const router = useRouter();
   const supabase = useSupabase();
+  const [resumeType, setResumeType] = useState<'text' | 'pdf'>('text');
+  const [uploadingPdf, setUploadingPdf] = useState(false);
 
   const form = useForm<JobApplicationValues>({
     resolver: zodResolver(jobApplicationSchema),
@@ -61,8 +65,86 @@ export default function CareersPage() {
       subject: "",
       experience: 0,
       resume: "",
+      resumeType: 'text',
     },
   });
+
+  const handlePdfUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (file.type !== 'application/pdf') {
+      toast({
+        title: "Invalid File",
+        description: "Please select a PDF file.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      toast({
+        title: "File Too Large",
+        description: "Please select a PDF smaller than 10MB",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!supabase) {
+      toast({
+        title: "Error",
+        description: "Database not connected",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setUploadingPdf(true);
+
+    try {
+      const fileExt = 'pdf';
+      const fileName = `${Date.now()}-${file.name}`;
+      const filePath = `resumes/${fileName}`;
+
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('documents')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (uploadError) {
+        // Check if bucket doesn't exist
+        if (uploadError.message.includes('Bucket not found')) {
+          throw new Error('Storage bucket not configured. Please run SETUP-STORAGE-BUCKETS.sql in your Supabase SQL Editor.');
+        }
+        throw uploadError;
+      }
+
+      const { data: urlData } = supabase.storage
+        .from('documents')
+        .getPublicUrl(filePath);
+
+      const publicUrl = urlData.publicUrl;
+      form.setValue('resume', publicUrl);
+      form.setValue('resumeType', 'pdf');
+
+      toast({
+        title: "Upload Successful!",
+        description: "Your resume has been uploaded.",
+      });
+    } catch (error: any) {
+      console.error('Error uploading PDF:', error);
+      toast({
+        title: "Upload Failed",
+        description: error.message || "Failed to upload PDF. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setUploadingPdf(false);
+    }
+  };
 
   async function onSubmit(data: JobApplicationValues) {
     if (!supabase) {
@@ -214,9 +296,60 @@ export default function CareersPage() {
                    <FormField control={form.control} name="resume" render={({ field }) => (
                         <FormItem>
                             <FormLabel>Resume / CV</FormLabel>
-                            <FormControl><Textarea placeholder="Paste your resume or provide a link to your online profile (e.g., LinkedIn)." className="min-h-[150px]" {...field} /></FormControl>
+                            <div className="space-y-4">
+                              <div className="flex gap-2">
+                                <Button
+                                  type="button"
+                                  variant={resumeType === 'text' ? 'default' : 'outline'}
+                                  size="sm"
+                                  onClick={() => setResumeType('text')}
+                                >
+                                  Write Resume
+                                </Button>
+                                <Button
+                                  type="button"
+                                  variant={resumeType === 'pdf' ? 'default' : 'outline'}
+                                  size="sm"
+                                  onClick={() => setResumeType('pdf')}
+                                >
+                                  Upload PDF
+                                </Button>
+                              </div>
+                              
+                              {resumeType === 'text' ? (
+                                <FormControl>
+                                  <Textarea 
+                                    placeholder="Paste your resume or provide a link to your online profile (e.g., LinkedIn)." 
+                                    className="min-h-[150px]" 
+                                    {...field} 
+                                  />
+                                </FormControl>
+                              ) : (
+                                <div className="space-y-2">
+                                  <input
+                                    type="file"
+                                    id="pdf-upload"
+                                    accept="application/pdf"
+                                    onChange={handlePdfUpload}
+                                    disabled={uploadingPdf}
+                                    className="hidden"
+                                  />
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    disabled={uploadingPdf}
+                                    onClick={() => document.getElementById('pdf-upload')?.click()}
+                                  >
+                                    {uploadingPdf ? "Uploading..." : field.value && form.getValues('resumeType') === 'pdf' ? "PDF Uploaded ✓" : "Choose PDF File"}
+                                  </Button>
+                                  {field.value && form.getValues('resumeType') === 'pdf' && (
+                                    <p className="text-sm text-muted-foreground">Resume uploaded successfully</p>
+                                  )}
+                                </div>
+                              )}
+                            </div>
                             <FormDescription>
-                                We currently do not support file uploads. Please paste your details above.
+                                You can either write your resume or upload it as a PDF file (max 10MB).
                             </FormDescription>
                             <FormMessage />
                         </FormItem>
