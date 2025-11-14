@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useData } from "@/lib/data-context";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 export default function HostelOccupancy() {
   const { hostelRooms } = useData();
@@ -23,31 +24,41 @@ export default function HostelOccupancy() {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <KpiCard
-            title="Occupancy Rate"
-            icon={<BedDouble className="h-5 w-5" />}
-            value={`${occupancyRate.toFixed(1)}%`}
-            description={`${totalOccupants} / ${totalCapacity} Beds Filled`}
-          />
-          <KpiCard
-            title="Total Occupants"
-            icon={<UserCheck className="h-5 w-5" />}
-            value={totalOccupants.toString()}
-            description="Students currently in hostel"
-          />
-          <KpiCard
-            title="Available Slots"
-            icon={<UserX className="h-5 w-5" />}
-            value={availableSlots.toString()}
-            description="Beds available for new students"
-          />
-          <KpiCard
-            title="Total Rooms"
-            icon={<BedDouble className="h-5 w-5" />}
-            value={hostelRooms.length.toString()}
-            description="Across all hostel blocks"
-          />
+        <div className="overflow-x-auto pb-2 scrollbar-visible">
+          <div className="flex gap-3 md:grid md:grid-cols-2 lg:grid-cols-4">
+            <div className="min-w-[240px] flex-shrink-0 md:min-w-0">
+              <KpiCard
+                title="Occupancy Rate"
+                icon={<BedDouble className="h-5 w-5" />}
+                value={`${occupancyRate.toFixed(1)}%`}
+                description={`${totalOccupants} / ${totalCapacity} Beds Filled`}
+              />
+            </div>
+            <div className="min-w-[240px] flex-shrink-0 md:min-w-0">
+              <KpiCard
+                title="Total Occupants"
+                icon={<UserCheck className="h-5 w-5" />}
+                value={totalOccupants.toString()}
+                description="Students currently in hostel"
+              />
+            </div>
+            <div className="min-w-[240px] flex-shrink-0 md:min-w-0">
+              <KpiCard
+                title="Available Slots"
+                icon={<UserX className="h-5 w-5" />}
+                value={availableSlots.toString()}
+                description="Beds available for new students"
+              />
+            </div>
+            <div className="min-w-[240px] flex-shrink-0 md:min-w-0">
+              <KpiCard
+                title="Total Rooms"
+                icon={<BedDouble className="h-5 w-5" />}
+                value={hostelRooms.length.toString()}
+                description="Across all hostel blocks"
+              />
+            </div>
+          </div>
         </div>
         <div>
           <h3 className="text-lg font-semibold mb-2">Room Status</h3>

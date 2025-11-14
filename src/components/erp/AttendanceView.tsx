@@ -66,18 +66,20 @@ export default function AttendanceView({ studentId }: AttendanceViewProps) {
             },
           }}
         />
-        <div className="flex justify-center space-x-4 mt-4">
-          <div className="flex items-center space-x-2">
-            <div className="h-4 w-4 rounded-full" style={{backgroundColor: 'hsl(var(--success))'}} />
-            <span className="text-sm">Present</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="h-4 w-4 rounded-full" style={{backgroundColor: 'hsl(var(--destructive))'}} />
-            <span className="text-sm">Absent</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="h-4 w-4 rounded-full" style={{backgroundColor: 'hsl(var(--warning))'}} />
-            <span className="text-sm">Holiday</span>
+        <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0 mt-4">
+          <div className="flex justify-center space-x-4 min-w-[300px]">
+            <div className="flex items-center space-x-2">
+              <div className="h-4 w-4 rounded-full" style={{backgroundColor: 'hsl(var(--success))'}} />
+              <span className="text-sm">Present</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="h-4 w-4 rounded-full" style={{backgroundColor: 'hsl(var(--destructive))'}} />
+              <span className="text-sm">Absent</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="h-4 w-4 rounded-full" style={{backgroundColor: 'hsl(var(--warning))'}} />
+              <span className="text-sm">Holiday</span>
+            </div>
           </div>
         </div>
       </CardContent>

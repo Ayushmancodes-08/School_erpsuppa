@@ -6,7 +6,7 @@ import { DollarSign, Edit, Receipt, TrendingUp, Users, Plus, Trash2 } from "luci
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import FeeStatusChart from "./FeeStatusChart";
 import KpiCard from "./KpiCard";
@@ -101,36 +101,48 @@ export default function FinanceDashboard() {
   return (
     <>
     <div className="space-y-6">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <KpiCard
-          title="Collection Rate"
-          icon={<TrendingUp className="h-6 w-6" />}
-          value={`${collectionRate.toFixed(1)}%`}
-          description={`₹${paidFees.toLocaleString()} / ₹${totalFees.toLocaleString()}`}
-        />
-        <KpiCard
-          title="Total Collected"
-          icon={<DollarSign className="h-6 w-6" />}
-          value={`₹${paidFees.toLocaleString()}`}
-          description="This academic year"
-        />
-        <KpiCard
-          title="Total Due"
-          icon={<DollarSign className="h-6 w-6 text-destructive" />}
-          value={`₹${dueFees.toLocaleString()}`}
-          description="Across all students"
-        />
-        <KpiCard
-          title="Overdue Payments"
-          icon={<Users className="h-6 w-6 text-destructive" />}
-          value={fees?.filter(f => f.status === 'Overdue').length.toString() || '0'}
-          description="Students with overdue fees"
-        />
+      <div className="overflow-x-auto pb-2 scrollbar-visible">
+        <div className="flex gap-3 md:grid md:grid-cols-2 lg:grid-cols-4">
+          <div className="min-w-[240px] flex-shrink-0 md:min-w-0">
+            <KpiCard
+              title="Collection Rate"
+              icon={<TrendingUp className="h-6 w-6" />}
+              value={`${collectionRate.toFixed(1)}%`}
+              description={`₹${paidFees.toLocaleString()} / ₹${totalFees.toLocaleString()}`}
+            />
+          </div>
+          <div className="min-w-[240px] flex-shrink-0 md:min-w-0">
+            <KpiCard
+              title="Total Collected"
+              icon={<DollarSign className="h-6 w-6" />}
+              value={`₹${paidFees.toLocaleString()}`}
+              description="This academic year"
+            />
+          </div>
+          <div className="min-w-[240px] flex-shrink-0 md:min-w-0">
+            <KpiCard
+              title="Total Due"
+              icon={<DollarSign className="h-6 w-6 text-destructive" />}
+              value={`₹${dueFees.toLocaleString()}`}
+              description="Across all students"
+            />
+          </div>
+          <div className="min-w-[240px] flex-shrink-0 md:min-w-0">
+            <KpiCard
+              title="Overdue Payments"
+              icon={<Users className="h-6 w-6 text-destructive" />}
+              value={fees?.filter(f => f.status === 'Overdue').length.toString() || '0'}
+              description="Students with overdue fees"
+            />
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-            <Card>
+          <ScrollArea className="w-full">
+            <div className="min-w-[calc(100vw-3rem)] md:min-w-0">
+              <Card className="overflow-hidden">
                 <CardHeader>
                     <div className="flex items-center justify-between">
                       <div>
@@ -154,9 +166,9 @@ export default function FinanceDashboard() {
                                 Add Tuition Fee
                               </Button>
                             </div>
-                            <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0 mt-4">
+                            <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0 mt-4 scrollbar-visible">
                               <ScrollArea className="h-[450px]">
-                                <div className="min-w-[640px]">
+                                <div className="min-w-[640px] md:min-w-0">
                                   <Table>
                                       <TableHeader>
                                       <TableRow>
@@ -218,9 +230,9 @@ export default function FinanceDashboard() {
                                 Add Hostel Fee
                               </Button>
                             </div>
-                             <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0 mt-4">
+                             <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0 mt-4 scrollbar-visible">
                                <ScrollArea className="h-[450px]">
-                                  <div className="min-w-[640px]">
+                                  <div className="min-w-[640px] md:min-w-0">
                                     <Table>
                                         <TableHeader>
                                         <TableRow>
@@ -277,15 +289,27 @@ export default function FinanceDashboard() {
                         </TabsContent>
                     </Tabs>
                 </CardContent>
-            </Card>
+              </Card>
+            </div>
+            <ScrollBar orientation="horizontal" className="h-3" />
+          </ScrollArea>
         </div>
         <div className="space-y-6">
-            <FeeStatusChart />
+          <ScrollArea className="w-full">
+            <div className="min-w-[280px] md:min-w-0">
+              <FeeStatusChart />
+            </div>
+            <ScrollBar orientation="horizontal" className="h-3" />
+          </ScrollArea>
         </div>
       </div>
-      <div className="grid grid-cols-1 gap-6">
-        <HostelManagement />
-      </div>
+      
+      <ScrollArea className="w-full">
+        <div className="min-w-[calc(100vw-3rem)] md:min-w-0">
+          <HostelManagement />
+        </div>
+        <ScrollBar orientation="horizontal" className="h-3" />
+      </ScrollArea>
     </div>
     {selectedFee && selectedFeeType && (
         <EditFeeDialog

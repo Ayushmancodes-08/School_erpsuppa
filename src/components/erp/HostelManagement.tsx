@@ -344,9 +344,9 @@ export default function HostelManagement() {
                     <PlusCircle className="mr-2 h-4 w-4" /> Add New Room
                 </Button>
               </div>
-              <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
+              <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0 scrollbar-visible">
                 <ScrollArea className="h-[400px] rounded-md border">
-                  <div className="min-w-[640px]">
+                  <div className="min-w-[640px] md:min-w-0">
                     <Table>
                       <TableHeader className="sticky top-0 bg-card">
                         <TableRow>
@@ -438,9 +438,9 @@ export default function HostelManagement() {
                         <PlusCircle className="mr-2 h-4 w-4" /> Add New Hostel
                     </Button>
                 </div>
-                <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
+                <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0 scrollbar-visible">
                   <ScrollArea className="h-[400px] rounded-md border">
-                      <div className="min-w-[480px]">
+                      <div className="min-w-[480px] md:min-w-0">
                         <Table>
                             <TableHeader>
                                 <TableRow>
@@ -494,9 +494,9 @@ export default function HostelManagement() {
             </TabsContent>
 
             <TabsContent value="occupants" className="mt-4">
-                 <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
+                 <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0 scrollbar-visible">
                    <ScrollArea className="h-[400px] rounded-md border">
-                      <div className="min-w-[560px]">
+                      <div className="min-w-[640px] md:min-w-0">
                         <Table>
                             <TableHeader>
                                 <TableRow>
