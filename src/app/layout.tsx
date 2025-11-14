@@ -7,8 +7,31 @@ import { DataProvider } from '@/lib/data-context';
 import { SupabaseClientProvider } from '@/supabase/client-provider';
 
 export const metadata: Metadata = {
-  title: 'School ERP',
-  description: 'A modern, low-cost ERP for educational institutions.',
+  title: {
+    default: 'School ERP',
+    template: '%s | School ERP',
+  },
+  description: 'A modern, comprehensive ERP system for educational institutions. Manage students, teachers, fees, admissions, attendance, and more.',
+  keywords: ['school', 'erp', 'education', 'management', 'student', 'teacher', 'admission', 'fees'],
+  authors: [{ name: 'School ERP Team' }],
+  creator: 'School ERP',
+  publisher: 'School ERP',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  icons: {
+    icon: '/favicon.svg',
+    apple: '/apple-icon.png',
+  },
+  manifest: '/manifest.json',
+  themeColor: '#2563eb',
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+  },
 };
 
 export default function RootLayout({
