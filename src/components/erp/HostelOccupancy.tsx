@@ -62,15 +62,16 @@ export default function HostelOccupancy() {
         </div>
         <div>
           <h3 className="text-lg font-semibold mb-2">Room Status</h3>
-          <div className="rounded-md border max-h-60 overflow-auto">
-            <Table>
-              <TableHeader className="sticky top-0 bg-card">
-                <TableRow>
-                  <TableHead>Room No.</TableHead>
-                  <TableHead>Occupants</TableHead>
-                  <TableHead className="text-right">Status</TableHead>
-                </TableRow>
-              </TableHeader>
+          <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
+            <div className="rounded-md border max-h-60 overflow-auto min-w-[400px]">
+              <Table>
+                <TableHeader className="sticky top-0 bg-card">
+                  <TableRow>
+                    <TableHead>Room No.</TableHead>
+                    <TableHead>Occupants</TableHead>
+                    <TableHead className="text-right">Status</TableHead>
+                  </TableRow>
+                </TableHeader>
               <TableBody>
                 {hostelRooms.map((room) => (
                   <TableRow key={room.id}>
@@ -90,6 +91,7 @@ export default function HostelOccupancy() {
               </TableBody>
             </Table>
           </div>
+        </div>
         </div>
       </CardContent>
     </Card>
