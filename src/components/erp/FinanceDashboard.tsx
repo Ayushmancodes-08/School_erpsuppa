@@ -141,10 +141,12 @@ export default function FinanceDashboard() {
                 </CardHeader>
                 <CardContent>
                     <Tabs defaultValue="tuition">
-                        <TabsList className="grid w-full grid-cols-2">
-                            <TabsTrigger value="tuition">Tuition Fees</TabsTrigger>
-                            <TabsTrigger value="hostel">Hostel Fees</TabsTrigger>
-                        </TabsList>
+                        <div className="overflow-x-auto -mx-6 px-6 mb-4">
+                          <TabsList className="inline-flex w-auto min-w-full md:w-full md:grid md:grid-cols-2">
+                              <TabsTrigger value="tuition" className="flex-shrink-0">Tuition Fees</TabsTrigger>
+                              <TabsTrigger value="hostel" className="flex-shrink-0">Hostel Fees</TabsTrigger>
+                          </TabsList>
+                        </div>
                         <TabsContent value="tuition">
                             <div className="flex justify-end mb-4">
                               <Button onClick={() => handleAddClick('tuition')} size="sm">
@@ -152,17 +154,19 @@ export default function FinanceDashboard() {
                                 Add Tuition Fee
                               </Button>
                             </div>
-                            <ScrollArea className="h-[450px] mt-4">
-                            <Table>
-                                <TableHeader>
-                                <TableRow>
-                                    <TableHead>Student Name</TableHead>
-                                    <TableHead>Class</TableHead>
-                                    <TableHead>Amount</TableHead>
-                                    <TableHead>Status</TableHead>
-                                    <TableHead className="text-right">Actions</TableHead>
-                                </TableRow>
-                                </TableHeader>
+                            <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0 mt-4">
+                              <ScrollArea className="h-[450px]">
+                                <div className="min-w-[640px]">
+                                  <Table>
+                                      <TableHeader>
+                                      <TableRow>
+                                          <TableHead>Student Name</TableHead>
+                                          <TableHead>Class</TableHead>
+                                          <TableHead>Amount</TableHead>
+                                          <TableHead>Status</TableHead>
+                                          <TableHead className="text-right">Actions</TableHead>
+                                      </TableRow>
+                                      </TableHeader>
                                 <TableBody>
                                 {fees?.map((fee) => (
                                     <TableRow key={fee.id}>
@@ -203,7 +207,9 @@ export default function FinanceDashboard() {
                                 ))}
                                 </TableBody>
                             </Table>
-                            </ScrollArea>
+                          </div>
+                        </ScrollArea>
+                      </div>
                         </TabsContent>
                         <TabsContent value="hostel">
                             <div className="flex justify-end mb-4">
@@ -212,17 +218,19 @@ export default function FinanceDashboard() {
                                 Add Hostel Fee
                               </Button>
                             </div>
-                             <ScrollArea className="h-[450px] mt-4">
-                            <Table>
-                                <TableHeader>
-                                <TableRow>
-                                    <TableHead>Student Name</TableHead>
-                                    <TableHead>Room No.</TableHead>
-                                    <TableHead>Amount</TableHead>
-                                    <TableHead>Status</TableHead>
-                                    <TableHead className="text-right">Actions</TableHead>
-                                </TableRow>
-                                </TableHeader>
+                             <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0 mt-4">
+                               <ScrollArea className="h-[450px]">
+                                  <div className="min-w-[640px]">
+                                    <Table>
+                                        <TableHeader>
+                                        <TableRow>
+                                            <TableHead>Student Name</TableHead>
+                                            <TableHead>Room No.</TableHead>
+                                            <TableHead>Amount</TableHead>
+                                            <TableHead>Status</TableHead>
+                                            <TableHead className="text-right">Actions</TableHead>
+                                        </TableRow>
+                                        </TableHeader>
                                 <TableBody>
                                 {hostelFees?.map((fee) => (
                                     <TableRow key={fee.id}>
@@ -263,7 +271,9 @@ export default function FinanceDashboard() {
                                 ))}
                                 </TableBody>
                             </Table>
-                            </ScrollArea>
+                          </div>
+                        </ScrollArea>
+                      </div>
                         </TabsContent>
                     </Tabs>
                 </CardContent>

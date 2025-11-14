@@ -311,11 +311,13 @@ export default function HostelManagement() {
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="rooms">
-            <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="rooms">Rooms</TabsTrigger>
-                <TabsTrigger value="hostels">Hostels</TabsTrigger>
-                <TabsTrigger value="occupants">Occupants</TabsTrigger>
-            </TabsList>
+            <div className="overflow-x-auto -mx-6 px-6 mb-4">
+              <TabsList className="inline-flex w-auto min-w-full md:w-full md:grid md:grid-cols-3">
+                  <TabsTrigger value="rooms" className="flex-shrink-0">Rooms</TabsTrigger>
+                  <TabsTrigger value="hostels" className="flex-shrink-0">Hostels</TabsTrigger>
+                  <TabsTrigger value="occupants" className="flex-shrink-0">Occupants</TabsTrigger>
+              </TabsList>
+            </div>
 
             <TabsContent value="rooms" className="mt-4">
               <div className="flex justify-end gap-2 mb-4">
@@ -342,18 +344,20 @@ export default function HostelManagement() {
                     <PlusCircle className="mr-2 h-4 w-4" /> Add New Room
                 </Button>
               </div>
-              <ScrollArea className="h-[400px] rounded-md border">
-                <Table>
-                  <TableHeader className="sticky top-0 bg-card">
-                    <TableRow>
-                      <TableHead>Room No.</TableHead>
-                      <TableHead>Hostel</TableHead>
-                      <TableHead>Capacity</TableHead>
-                      <TableHead>Occupants</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
+              <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
+                <ScrollArea className="h-[400px] rounded-md border">
+                  <div className="min-w-[640px]">
+                    <Table>
+                      <TableHeader className="sticky top-0 bg-card">
+                        <TableRow>
+                          <TableHead>Room No.</TableHead>
+                          <TableHead>Hostel</TableHead>
+                          <TableHead>Capacity</TableHead>
+                          <TableHead>Occupants</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead className="text-right">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
                   <TableBody>
                     {hostelRooms && hostelRooms.length > 0 ? (
                       hostelRooms.map((room) => (
@@ -404,7 +408,9 @@ export default function HostelManagement() {
                     )}
                   </TableBody>
                 </Table>
-              </ScrollArea>
+              </div>
+            </ScrollArea>
+          </div>
             </TabsContent>
 
             <TabsContent value="hostels" className="mt-4">
@@ -432,15 +438,17 @@ export default function HostelManagement() {
                         <PlusCircle className="mr-2 h-4 w-4" /> Add New Hostel
                     </Button>
                 </div>
-                <ScrollArea className="h-[400px] rounded-md border">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Hostel Name</TableHead>
-                                <TableHead>Type</TableHead>
-                                <TableHead className="text-right">Actions</TableHead>
-                            </TableRow>
-                        </TableHeader>
+                <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
+                  <ScrollArea className="h-[400px] rounded-md border">
+                      <div className="min-w-[480px]">
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Hostel Name</TableHead>
+                                    <TableHead>Type</TableHead>
+                                    <TableHead className="text-right">Actions</TableHead>
+                                </TableRow>
+                            </TableHeader>
                         <TableBody>
                             {hostels && hostels.length > 0 ? (
                                 hostels.map(hostel => (
@@ -480,20 +488,24 @@ export default function HostelManagement() {
                             )}
                         </TableBody>
                     </Table>
+                  </div>
                 </ScrollArea>
+              </div>
             </TabsContent>
 
             <TabsContent value="occupants" className="mt-4">
-                 <ScrollArea className="h-[400px] rounded-md border">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Student Name</TableHead>
-                                <TableHead>Hostel</TableHead>
-                                <TableHead>Room No.</TableHead>
-                                <TableHead className="text-right">Actions</TableHead>
-                            </TableRow>
-                        </TableHeader>
+                 <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
+                   <ScrollArea className="h-[400px] rounded-md border">
+                      <div className="min-w-[560px]">
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Student Name</TableHead>
+                                    <TableHead>Hostel</TableHead>
+                                    <TableHead>Room No.</TableHead>
+                                    <TableHead className="text-right">Actions</TableHead>
+                                </TableRow>
+                            </TableHeader>
                         <TableBody>
                             {occupants.length > 0 ? (
                                 occupants.map((occ, index) => (
@@ -534,7 +546,9 @@ export default function HostelManagement() {
                             )}
                         </TableBody>
                     </Table>
+                  </div>
                  </ScrollArea>
+               </div>
             </TabsContent>
           </Tabs>
         </CardContent>
