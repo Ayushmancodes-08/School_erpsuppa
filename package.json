@@ -39,11 +39,7 @@
     "dotenv": "^16.5.0",
     "embla-carousel-react": "^8.6.0",
     "lucide-react": "^0.475.0",
-<<<<<<< HEAD
     "next": "14.2.5",
-=======
-    "next": "15.3.6",
->>>>>>> c9c463cfc73df16566c3458b149549561ee8cb21
     "patch-package": "^8.0.0",
     "react": "^18.3.1",
     "react-day-picker": "^8.10.1",
