@@ -226,22 +226,7 @@ CREATE POLICY "Allow public access" ON notices FOR ALL TO anon, authenticated US
 -- STEP 4: ENABLE REALTIME
 -- ============================================
 
--- Remove tables from publication first (if they exist) to avoid errors
-ALTER PUBLICATION supabase_realtime DROP TABLE IF EXISTS students;
-ALTER PUBLICATION supabase_realtime DROP TABLE IF EXISTS teachers;
-ALTER PUBLICATION supabase_realtime DROP TABLE IF EXISTS fees;
-ALTER PUBLICATION supabase_realtime DROP TABLE IF EXISTS hostel_fees;
-ALTER PUBLICATION supabase_realtime DROP TABLE IF EXISTS student_attendance;
-ALTER PUBLICATION supabase_realtime DROP TABLE IF EXISTS hostels;
-ALTER PUBLICATION supabase_realtime DROP TABLE IF EXISTS hostel_rooms;
-ALTER PUBLICATION supabase_realtime DROP TABLE IF EXISTS homeworks;
-ALTER PUBLICATION supabase_realtime DROP TABLE IF EXISTS admissions;
-ALTER PUBLICATION supabase_realtime DROP TABLE IF EXISTS admission_applications;
-ALTER PUBLICATION supabase_realtime DROP TABLE IF EXISTS job_applications;
-ALTER PUBLICATION supabase_realtime DROP TABLE IF EXISTS users;
-ALTER PUBLICATION supabase_realtime DROP TABLE IF EXISTS notices;
-
--- Now add them back
+-- Add tables to realtime publication
 ALTER PUBLICATION supabase_realtime ADD TABLE students;
 ALTER PUBLICATION supabase_realtime ADD TABLE teachers;
 ALTER PUBLICATION supabase_realtime ADD TABLE fees;
